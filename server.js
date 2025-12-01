@@ -13,7 +13,17 @@ import commentRoutes from "./routes/commentRoutes.js";
 connectDB();
 
 const app = express();
-app.use(cors());
+
+const frontendURL = 'https://itcompanyfrontend.onrender.com'
+
+// app.use(cors());
+
+app.use(cors({
+    origin: frontendURL, 
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true 
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
