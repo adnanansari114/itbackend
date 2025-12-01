@@ -14,12 +14,17 @@ connectDB();
 
 const app = express();
 
-const frontendURL = 'https://itcompanyfrontend.onrender.com'
+// const frontendURL = 'https://itcompanyfrontend.onrender.com'
 
 // app.use(cors());
+const allowedOrigins = [
+  "https://itcompanyfrontend.onrender.com",
+  "http://localhost:5173"
+];
+
 
 app.use(cors({
-    origin: frontendURL, 
+    origin: allowedOrigins, 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true 
 }));
