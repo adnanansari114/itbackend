@@ -1,0 +1,24 @@
+# Environment variables
+env.txt
+.env
+*.env
+.env.local
+.env.development
+.env.production
+
+# Dependencies
+node_modules/
+package-lock.json  # अगर private deps हैं
+
+# Logs and builds
+*.log
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
