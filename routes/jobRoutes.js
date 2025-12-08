@@ -8,6 +8,22 @@ router.post("/", adminAuth, createJob);
 
 router.get("/", getJobs);
 
+// routes/jobRoutes.js
+router.get("/api/jobs/:id", async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.id);
+
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    res.json(job);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 router.put("/:id", adminAuth, updateJob);
 
 router.delete("/:id", adminAuth, deleteJob);
