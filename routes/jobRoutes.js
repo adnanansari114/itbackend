@@ -1,6 +1,7 @@
 import express from "express";
 import { createJob, getJobs, updateJob, deleteJob } from "../controllers/jobController.js";
 import { adminAuth } from "../middleware/adminAuth.js";
+import Job from "../models/Job.js";
 
 const router = express.Router();
 
