@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post("/", adminAuth, createJob);
 
-router.get("/", getJobs);
+router.get("/:id", getJobs);
 
 router.put("/:id", adminAuth, updateJob);
 
