@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const submitContact = async (req, res) => {
   try {
-    const { name, email, phone, company, message, 'g-recaptcha-response': token } = req.body;
+    const { name, email, phone, company, userLocation, companyLocation, message, 'g-recaptcha-response': token } = req.body;
 
     const secretKey = process.env.RECAPTCHA_SECRET_KEY; 
     const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${token}`;
@@ -17,7 +17,8 @@ export const submitContact = async (req, res) => {
       email,
       phone,
       company,
-      message
+      messageuserLocation, 
+      companyLocation
     });
 
     res.json({ success: true, message: "Message submitted successfully" });
