@@ -36,3 +36,17 @@ export const uploadResume = async (req, res) => {
     return res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
+
+export const getAllApplications = async (req, res) => {
+  try {
+    const applications = await JobApplication.find()
+      .populate("jobId", "title")  // Job ka title dikhega
+      .sort({ createdAt: -1 });
+
+    res.json(applications);
+  } catch (err) {
+    console.error("Error fetching applications:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};

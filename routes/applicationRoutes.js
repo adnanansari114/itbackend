@@ -1,7 +1,8 @@
 import express from "express";
 import multer from "multer";
 import { sendVerificationCode, verifyCode } from "../controllers/verifyController.js";
-import { uploadResume } from "../controllers/applicationController.js";
+import { adminAuth } from "../middleware/adminAuth.js";
+import { uploadResume, getAllApplications } from "../controllers/applicationController.js";
 import path from "path";
 import fs from "fs";
 
@@ -42,5 +43,7 @@ const upload = multer({
 router.post("/send-otp", sendVerificationCode);
 router.post("/verify-otp", verifyCode);
 router.post("/upload-resume", upload.single("resume"), uploadResume);
+
+router.get("/all", adminAuth, getAllApplications);
 
 export default router;
