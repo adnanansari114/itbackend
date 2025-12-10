@@ -9,6 +9,7 @@ import jobRoutes from "./routes/jobRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
+import blogRoutes from "./routes/blogRoutes.js";
 
 connectDB();
 
@@ -39,6 +40,7 @@ app.use("/api/apply", applicationRoutes);
 app.use("/api/comments", commentRoutes);
 // app.use("/api/apply", applicationRoutes);
 app.use("/uploads", express.static("uploads"));
+app.use("/api/blogs", blogRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log("Server running on port " + process.env.PORT);
