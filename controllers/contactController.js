@@ -18,7 +18,8 @@ export const submitContact = async (req, res) => {
       phone,
       company,
       userLocation, 
-      companyLocation
+      companyLocation,
+      message
     });
 
     res.json({ success: true, message: "Message submitted successfully" });
