@@ -17,7 +17,7 @@ export const submitContact = async (req, res) => {
       email,
       phone,
       company,
-      messageuserLocation, 
+      userLocation, 
       companyLocation
     });
 
