@@ -42,11 +42,11 @@ router.delete("/delete/:id", async (req, res) => {
 
 router.post("/add", async (req, res) => {
   try {
-    const { blogId, blogTitle, name, email, comment, parentId = null } = req.body;
+    const { blogId, blogtitle, name, email, comment, parentId = null } = req.body;
 
     const newComment = new Comment({
       blogId,
-      blogTitle,
+      blogtitle,
       name,
       email: email || "", // reply mein email optional
       website,
