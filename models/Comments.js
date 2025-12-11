@@ -1,7 +1,8 @@
-// const mongoose = require("mongoose");
+
+// import mongoose from "mongoose";
 
 // const commentSchema = new mongoose.Schema({
-//   blogId: { type: mongoose.Schema.Types.ObjectId, ref: 'Blog' },
+//   blogId: { type: mongoose.Schema.Types.ObjectId, ref: "Blog" },
 //   blogtitle: String,
 //   name: String,
 //   email: String,
@@ -10,23 +11,26 @@
 //   createdAt: { type: Date, default: Date.now }
 // });
 
-// module.exports = mongoose.model("Comment", commentSchema);
+// // Yeh line badlo
+// // module.exports = mongoose.model("Comment", commentSchema);
+
+// // Nayi line → ESM style
+// const Comment = mongoose.model("Comment", commentSchema);
+// export default Comment;
+
 
 import mongoose from "mongoose";
 
 const commentSchema = new mongoose.Schema({
-  blogId: { type: mongoose.Schema.Types.ObjectId, ref: "Blog" },
-  blogtitle: String,
-  name: String,
-  email: String,
-  website: String,
-  comment: String,
+  blogId: { type: mongoose.Schema.Types.ObjectId, ref: "Blog", required: true },
+  blogtitle: { type: String, required: true },
+  name: { type: String, required: true },
+  email: { type: String }, // Optional for replies
+  website: { type: String }, // Optional for replies
+  comment: { type: String, required: true },
+  parentId: { type: mongoose.Schema.Types.ObjectId, ref: "Comment", default: null }, // For replies
   createdAt: { type: Date, default: Date.now }
 });
 
-// Yeh line badlo
-// module.exports = mongoose.model("Comment", commentSchema);
-
-// Nayi line → ESM style
 const Comment = mongoose.model("Comment", commentSchema);
 export default Comment;

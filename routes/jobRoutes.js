@@ -9,7 +9,6 @@ router.post("/", adminAuth, createJob);
 
 router.get("/", getJobs);
 
-// routes/jobRoutes.js
 router.get("/:id", async (req, res) => {
   try {
     const job = await Job.findById(req.params.id);

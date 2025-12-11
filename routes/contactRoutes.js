@@ -8,4 +8,5 @@ router.post("/", submitContact);
 
 router.get("/all", adminAuth, getAllContacts);
 
+
 export default router;
