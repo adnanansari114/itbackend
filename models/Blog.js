@@ -9,6 +9,12 @@ const blogSchema = new mongoose.Schema({
   whyChoosePoints: [{ type: String }], // Array for exactly 4 points
   additionalHeading: { type: String, required: true },
   additionalPoints: [{ type: String }], // Array for exactly 5 points
+  faqs: [
+    {
+      question: { type: String, required: true },
+      answer: { type: String, required: true }
+    }
+  ],
   isActive: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now }
 });
