@@ -67,26 +67,41 @@ router.get("/all", async (req, res) => {
 });
 
 // New GET for blog-specific threaded comments
+// router.get("/blog/:blogId", async (req, res) => {
+//   try {
+//     const comments = await Comment.aggregate([
+//       { $match: { blogId: new mongoose.Types.ObjectId(req.params.blogId) } },
+//       { $sort: { createdAt: -1 } },
+//       {
+//         $graphLookup: {
+//           from: "comments",
+//           startWith: "$_id",
+//           connectFromField: "_id",
+//           connectToField: "parentId",
+//           as: "replies",
+//           depthField: "depth"
+//         }
+//       },
+//       { $match: { parentId: null } } // Only top-level comments
+//     ]);
+//     res.json(comments);
+//   } catch (error) {
+//     res.status(500).json({ success: false, error: error.message });
+//   }
+// });
+
+
+// routes/comment.js (GET route)
 router.get("/blog/:blogId", async (req, res) => {
   try {
-    const comments = await Comment.aggregate([
-      { $match: { blogId: new mongoose.Types.ObjectId(req.params.blogId) } },
-      { $sort: { createdAt: -1 } },
-      {
-        $graphLookup: {
-          from: "comments",
-          startWith: "$_id",
-          connectFromField: "_id",
-          connectToField: "parentId",
-          as: "replies",
-          depthField: "depth"
-        }
-      },
-      { $match: { parentId: null } } // Only top-level comments
-    ]);
+    const comments = await Comment.find({ 
+      blogId: req.params.blogId   // ← Ab string se match hoga
+    }).sort({ createdAt: 1 });
+    
     res.json(comments);
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 

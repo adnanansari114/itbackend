@@ -19,16 +19,34 @@
 // export default Comment;
 
 
+// import mongoose from "mongoose";
+
+// const commentSchema = new mongoose.Schema({
+//   blogId: { type: mongoose.Schema.Types.ObjectId, ref: "Blog", required: true },
+//   blogtitle: { type: String, required: true },
+//   name: { type: String, required: true },
+//   email: { type: String }, // Optional for replies
+//   website: { type: String }, // Optional for replies
+//   comment: { type: String, required: true },
+//   parentId: { type: mongoose.Schema.Types.ObjectId, ref: "Comment", default: null }, // For replies
+//   createdAt: { type: Date, default: Date.now }
+// });
+
+// const Comment = mongoose.model("Comment", commentSchema);
+// export default Comment;
+
+
+// Comment.js (FINAL - WORKING)
 import mongoose from "mongoose";
 
 const commentSchema = new mongoose.Schema({
-  blogId: { type: mongoose.Schema.Types.ObjectId, ref: "Blog", required: true },
+  blogId: { type: String, required: true },           // ← YEH STRING RAKHO
   blogtitle: { type: String, required: true },
   name: { type: String, required: true },
-  email: { type: String }, // Optional for replies
-  website: { type: String }, // Optional for replies
+  email: { type: String },
+  website: { type: String },
   comment: { type: String, required: true },
-  parentId: { type: mongoose.Schema.Types.ObjectId, ref: "Comment", default: null }, // For replies
+  parentId: { type: String, default: null },          // ← YEH BHI STRING
   createdAt: { type: Date, default: Date.now }
 });
 
