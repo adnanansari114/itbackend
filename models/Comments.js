@@ -18,19 +18,17 @@
 // const Comment = mongoose.model("Comment", commentSchema);
 // export default Comment;
 
-
-// models/Comment.js
 import mongoose from "mongoose";
 
 const commentSchema = new mongoose.Schema({
   blogId: { type: mongoose.Schema.Types.ObjectId, ref: "Blog", required: true },
-  blogTitle: { type: String, required: true }, // tum already bhej rahe ho frontend se
+  blogTitle: { type: String, required: true }, // Exact "blogTitle"
   name: { type: String, required: true },
-  email: { type: String, required: true },
-  website: String,
+  email: { type: String, required: false }, // Reply ke liye optional
+  website: { type: String },
   comment: { type: String, required: true },
-  parentId: { type: mongoose.Schema.Types.ObjectId, ref: "Comment", default: null }, // null = top level
-  replies: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }], // nested replies
+  parentId: { type: mongoose.Schema.Types.ObjectId, ref: "Comment", default: null },
+  replies: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
   createdAt: { type: Date, default: Date.now }
 });
 

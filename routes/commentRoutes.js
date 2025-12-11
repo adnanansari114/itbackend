@@ -37,26 +37,32 @@ router.delete("/delete/:id", async (req, res) => {
 
 
 
-
-// routes/commentRoutes.js
-
 router.post("/add", async (req, res) => {
   try {
-    const { blogId, blogTitle, name, email, comment, parentId = null } = req.body;
+    const { blogId, blogTitle, name, email, website, comment, parentId = null } = req.body;
+
+    // Log incoming request
+    console.log("Request body:", req.body);
+
+    // Validation
+    if (!blogId || !blogTitle || !name || !comment) {
+      console.log("Missing fields:", { blogId, blogTitle, name, comment });
+      return res.status(400).json({ success: false, message: "Missing required fields" });
+    }
 
     const newComment = new Comment({
       blogId,
       blogTitle,
       name,
-      email: email || "", // reply mein email optional
-      website,
+      email: email || "",
+      website: website || "",
       comment,
       parentId
     });
 
     await newComment.save();
 
-    // Agar reply hai to parent ke replies array mein add karo
+    // If reply, add to parent's replies array
     if (parentId) {
       await Comment.findByIdAndUpdate(parentId, {
         $push: { replies: newComment._id }
@@ -65,9 +71,11 @@ router.post("/add", async (req, res) => {
 
     res.json({ success: true, comment: newComment });
   } catch (error) {
+    console.error("Comment add error:", error.message, error.stack);
     res.status(500).json({ success: false, error: error.message });
   }
 });
+
 
 // Get all comments for a blog (top level only, replies nested)
 router.get("/blog/:blogId", async (req, res) => {
