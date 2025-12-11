@@ -21,12 +21,37 @@ export const getJobs = async (req, res) => {
 };
 
 
+// export const updateJob = async (req, res) => {
+//   try {
+//     const updated = await Job.findByIdAndUpdate(
+//       req.params.id,
+//       req.body,
+//       { new: true }
+//     );
+
+//     if (!updated) {
+//       return res.status(404).json({ message: "Job not found" });
+//     }
+
+//     res.json({ message: "Job updated successfully", job: updated });
+//   } catch (err) {
+//     res.status(500).json({ message: "Error updating job", error: err.message });
+//   }
+// };
 export const updateJob = async (req, res) => {
   try {
     const updated = await Job.findByIdAndUpdate(
       req.params.id,
-      req.body,
-      { new: true }
+      {
+        techstack: req.body.techstack,
+        company: "The IT Talent",
+        engagementtype: req.body.engagementtype,
+        status: req.body.status,
+        location: req.body.location,
+        budget: req.body.budget,
+        description: req.body.description,
+      },
+      { new: true, runValidators: true }
     );
 
     if (!updated) {
@@ -35,9 +60,14 @@ export const updateJob = async (req, res) => {
 
     res.json({ message: "Job updated successfully", job: updated });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ message: "Error updating job", error: err.message });
   }
 };
+
+
+
+
 
 // 🔥 Delete Job (Admin Only)
 export const deleteJob = async (req, res) => {
