@@ -4,17 +4,6 @@ const blogSchema = new mongoose.Schema({
   title: { type: String, required: true },
   heading1: { type: String, required: true },
   paragraphs1: [{ type: String }], // Array for multiple paragraphs
-  heading2: { type: String, required: true },
-  paragraphs2: [{ type: String }], // Array for multiple paragraphs
-  whyChoosePoints: [{ type: String }], // Array for exactly 4 points
-  additionalHeading: { type: String, required: true },
-  additionalPoints: [{ type: String }], // Array for exactly 5 points
-  faqs: [
-    {
-      question: { type: String, required: true },
-      answer: { type: String, required: true }
-    }
-  ],
   isActive: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now }
 });
