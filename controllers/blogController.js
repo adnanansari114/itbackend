@@ -65,35 +65,69 @@ import Blog from "../models/Blog.js";
 import cloudinary from "../config/cloudinary.js";
 import fs from "fs"; // file delete karne ke liye temp se
 
+// export const createBlog = async (req, res) => {
+//   try {
+//     let imageUrl = null;
+
+//     // Agar image upload ki gayi ho
+//     if (req.file) {
+//       const result = await cloudinary.uploader.upload(req.file.path);
+//       imageUrl = result.secure_url;
+
+//       // Temporary file delete kar do
+//       fs.unlink(req.file.path, (err) => {
+//         if (err) console.log("Temp file delete error:", err);
+//       });
+//     }
+
+//     const blogData = {
+//       ...req.body,
+//       image: imageUrl
+//     };
+
+//     const blog = await Blog.create(blogData);
+//     res.status(201).json({ message: "Blog created successfully", blog });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: "Error creating blog", error: err.message });
+//   }
+// };
 export const createBlog = async (req, res) => {
   try {
     let imageUrl = null;
 
-    // Agar image upload ki gayi ho
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path);
       imageUrl = result.secure_url;
+      fs.unlink(req.file.path, err => err && console.log(err));
+    }
 
-      // Temporary file delete kar do
-      fs.unlink(req.file.path, (err) => {
-        if (err) console.log("Temp file delete error:", err);
-      });
+    // YE 3 LINES ADD KARO — paragraphs1 ko array banao
+    let paragraphs1 = [];
+    if (req.body.paragraphs1) {
+      try {
+        paragraphs1 = JSON.parse(req.body.paragraphs1);
+      } catch (e) {
+        paragraphs1 = typeof req.body.paragraphs1 === "string" 
+          ? [req.body.paragraphs1] 
+          : [];
+      }
     }
 
     const blogData = {
-      ...req.body,
+      title: req.body.title,
+      heading1: req.body.heading1,
+      paragraphs1: paragraphs1,  // ← ab ye array hai
       image: imageUrl
     };
 
     const blog = await Blog.create(blogData);
-    res.status(201).json({ message: "Blog created successfully", blog });
+    res.status(201).json({ message: "Blog created", blog });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Error creating blog", error: err.message });
+    console.error("Create blog error:", err);
+    res.status(500).json({ message: "Error", error: err.message });
   }
 };
-
-// controllers/blogController.js → updateBlog function mein
 
 export const updateBlog = async (req, res) => {
   try {
