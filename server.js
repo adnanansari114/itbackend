@@ -26,7 +26,12 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true 
 }));
+
+app.use(express.raw({ type: "application/octet-stream" }));
  
+app.use("/api/blogs", blogRoutes);
+app.use("/api/comments", commentRoutes);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -34,10 +39,9 @@ app.use("/api/jobs", jobRoutes);
 app.use("/api/admin", adminRoutes); 
 app.use("/api/contact", contactRoutes);
 app.use("/api/apply", applicationRoutes);
-app.use("/api/comments", commentRoutes);
 // app.use("/api/apply", applicationRoutes);
 app.use("/uploads", express.static("uploads"));
-app.use("/api/blogs", blogRoutes);
+
 
 app.listen(process.env.PORT, () => {
   console.log("Server running on port " + process.env.PORT);
