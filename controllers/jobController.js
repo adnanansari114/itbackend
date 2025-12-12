@@ -20,24 +20,6 @@ export const getJobs = async (req, res) => {
   }
 };
 
-
-// export const updateJob = async (req, res) => {
-//   try {
-//     const updated = await Job.findByIdAndUpdate(
-//       req.params.id,
-//       req.body,
-//       { new: true }
-//     );
-
-//     if (!updated) {
-//       return res.status(404).json({ message: "Job not found" });
-//     }
-
-//     res.json({ message: "Job updated successfully", job: updated });
-//   } catch (err) {
-//     res.status(500).json({ message: "Error updating job", error: err.message });
-//   }
-// };
 export const updateJob = async (req, res) => {
   try {
     const updated = await Job.findByIdAndUpdate(

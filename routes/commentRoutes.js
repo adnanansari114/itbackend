@@ -77,7 +77,6 @@ router.post("/add", async (req, res) => {
 });
 
 
-// Get all comments for a blog (top level only, replies nested)
 router.get("/blog/:blogId", async (req, res) => {
   try {
     const comments = await Comment.find({ 
@@ -85,7 +84,7 @@ router.get("/blog/:blogId", async (req, res) => {
       parentId: null 
     })
     .sort({ createdAt: -1 })
-    .populate("replies"); // nested replies load ho jayenge
+    .populate("replies");
 
     res.json(comments);
   } catch (error) {

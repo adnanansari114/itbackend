@@ -28,7 +28,6 @@ app.use(cors({
     credentials: true 
 }));
 
-// app.use(express.raw({ type: "application/octet-stream" }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

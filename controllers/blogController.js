@@ -1,97 +1,8 @@
-// import Blog from "../models/Blog.js";
 
-// export const createBlog = async (req, res) => {
-//   try {
-//     const blog = await Blog.create(req.body);
-//     res.status(201).json({ message: "Blog created successfully", blog });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Error creating blog", error: err.message });
-//   }
-// };
-
-// export const getBlogs = async (req, res) => {
-//   try {
-//     const blogs = await Blog.find().sort({ createdAt: -1 });
-//     res.json(blogs);
-//   } catch (err) {
-//     res.status(500).json({ message: "Error fetching blogs" });
-//   }
-// };
-
-// export const getBlogById = async (req, res) => {
-//   try {
-//     const blog = await Blog.findById(req.params.id);
-//     if (!blog) {
-//       return res.status(404).json({ message: "Blog not found" });
-//     }
-//     res.json(blog);
-//   } catch (err) {
-//     res.status(500).json({ message: "Error fetching blog", error: err.message });
-//   }
-// };
-
-// export const updateBlog = async (req, res) => {
-//   try {
-//     const updated = await Blog.findByIdAndUpdate(
-//       req.params.id,
-//       req.body,
-//       { new: true }
-//     );
-//     if (!updated) {
-//       return res.status(404).json({ message: "Blog not found" });
-//     }
-//     res.json({ message: "Blog updated successfully", blog: updated });
-//   } catch (err) {
-//     res.status(500).json({ message: "Error updating blog", error: err.message });
-//   }
-// };
-
-// export const deleteBlog = async (req, res) => {
-//   try {
-//     const deleted = await Blog.findByIdAndDelete(req.params.id);
-//     if (!deleted) {
-//       return res.status(404).json({ message: "Blog not found" });
-//     }
-//     res.json({ message: "Blog deleted successfully" });
-//   } catch (err) {
-//     res.status(500).json({ message: "Error deleting blog", error: err.message });
-//   }
-// };
-
-
-// controllers/blogController.js
 import Blog from "../models/Blog.js";
 import cloudinary from "../config/cloudinary.js";
-import fs from "fs"; // file delete karne ke liye temp se
+import fs from "fs"; 
 
-// export const createBlog = async (req, res) => {
-//   try {
-//     let imageUrl = null;
-
-//     // Agar image upload ki gayi ho
-//     if (req.file) {
-//       const result = await cloudinary.uploader.upload(req.file.path);
-//       imageUrl = result.secure_url;
-
-//       // Temporary file delete kar do
-//       fs.unlink(req.file.path, (err) => {
-//         if (err) console.log("Temp file delete error:", err);
-//       });
-//     }
-
-//     const blogData = {
-//       ...req.body,
-//       image: imageUrl
-//     };
-
-//     const blog = await Blog.create(blogData);
-//     res.status(201).json({ message: "Blog created successfully", blog });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Error creating blog", error: err.message });
-//   }
-// };
 export const createBlog = async (req, res) => {
   try {
     let imageUrl = null;
@@ -102,7 +13,6 @@ export const createBlog = async (req, res) => {
       fs.unlink(req.file.path, () => {});
     }
 
-    // YE SABSE ZAROORI FIX — req.body khali aa raha tha!
     let paragraphs1 = [];
     if (req.body.paragraphs1) {
       try {
@@ -115,7 +25,6 @@ export const createBlog = async (req, res) => {
       }
     }
 
-    // YE 3 LINES ADD KARO — req.body.title undefined tha!
     const title = req.body.title?.trim() || "Untitled Blog";
     const heading1 = req.body.heading1?.trim() || "No Heading";
 
@@ -127,7 +36,7 @@ export const createBlog = async (req, res) => {
       title,
       heading1,
       paragraphs1: paragraphs1.filter(p => p.trim()),
-      image: imageUrl  // null bhi chalega
+      image: imageUrl  
     };
 
     const blog = await Blog.create(blogData);
@@ -139,27 +48,23 @@ export const createBlog = async (req, res) => {
   }
 };
 
-// controllers/blogController.js → updateBlog function mein
 
 export const updateBlog = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ message: "Blog not found" });
 
-    let imageUrl = blog.image; // purani image
+    let imageUrl = blog.image; 
 
     if (req.file) {
-      // Agar purani image thi Cloudinary pe, to delete kar do
       if (blog.image) {
-        const publicId = blog.image.split("/").pop().split(".")[0]; // extract public_id
-        await cloudinary.uploader.destroy(publicId); // ye line add karo
+        const publicId = blog.image.split("/").pop().split(".")[0]; 
+        await cloudinary.uploader.destroy(publicId); 
       }
 
-      // Nayi image upload karo
       const result = await cloudinary.uploader.upload(req.file.path);
       imageUrl = result.secure_url;
 
-      // Temp file delete
       fs.unlink(req.file.path, (err) => {
         if (err) console.log("Temp delete error:", err);
       });
@@ -178,7 +83,6 @@ export const updateBlog = async (req, res) => {
   }
 };
 
-// Baaki functions same rahenge
 export const getBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find().sort({ createdAt: -1 });
@@ -205,7 +109,6 @@ export const deleteBlog = async (req, res) => {
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ message: "Blog not found" });
 
-    // Agar image hai Cloudinary pe, delete kar do
     if (blog.image) {
       const publicId = blog.image.split("/").pop().split(".")[0];
       await cloudinary.uploader.destroy(publicId);

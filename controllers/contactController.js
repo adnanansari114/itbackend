@@ -15,7 +15,6 @@ export const submitContact = async (req, res) => {
       "g-recaptcha-response": token,
     } = req.body;
 
-    // === reCAPTCHA Verification ===
     const secretKey = process.env.RECAPTCHA_SECRET_KEY;
     const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${token}`;
     const recapRes = await axios.post(verifyUrl);
@@ -24,7 +23,6 @@ export const submitContact = async (req, res) => {
       return res.status(400).json({ message: "reCAPTCHA verification failed. Are you a robot?" });
     }
 
-    // === Save to Database ===
     const newContact = await Contact.create({
       name,
       email,
@@ -35,19 +33,17 @@ export const submitContact = async (req, res) => {
       message,
     });
 
-    // === Send Notification Email via Brevo ===
     const brevoApiKey = process.env.BREVO_API_KEY;
-    const senderEmail = process.env.BREVO_SENDER_EMAIL; // murtaza@theittalent.com
-    const senderName = process.env.BREVO_SENDER_NAME;   // The IT Talent
+    const senderEmail = process.env.BREVO_SENDER_EMAIL; 
+    const senderName = process.env.BREVO_SENDER_NAME;   
 
-    // Yahan apna/admin ka email daalo jahan notification chahiye
-    const adminEmail = "51110102967@piemr.edu.in"; // Ya jo bhi email chahiye (multiple bhi daal sakte ho)
+
+    const adminEmail = "51110102967@piemr.edu.in"; 
 
     const emailData = {
       sender: { name: senderName, email: senderEmail },
       to: [
-        { email: adminEmail }, // ← Yahan change kar sakte ho
-        // Agar multiple: { email: "another@admin.com" }
+        { email: adminEmail }, 
       ],
       subject: `New Contact Form Submission from ${name}`,
       htmlContent: `
@@ -80,10 +76,9 @@ export const submitContact = async (req, res) => {
       console.log("Notification email sent successfully to admin");
     } catch (emailErr) {
       console.error("Brevo Email Error:", emailErr.response?.data || emailErr.message);
-      // Email fail hone par bhi form submit successful rahega (user ko issue nahi hona chahiye)
     }
 
-    // === Response to Frontend ===
+  
     res.json({ success: true, message: "Message submitted successfully" });
   } catch (err) {
     console.error("Contact Submit Error:", err);

@@ -23,11 +23,10 @@ import {
   deleteBlog 
 } from "../controllers/blogController.js";
 import { adminAuth } from "../middleware/adminAuth.js";
-import upload from "../middleware/multer.js"; // ← YE IMPORT KARO
+import upload from "../middleware/multer.js"; 
 
 const router = express.Router();
 
-// Image upload ke saath create aur update
 router.post("/", adminAuth, upload.single("image"), createBlog);
 router.put("/:id", adminAuth, upload.single("image"), updateBlog);
 

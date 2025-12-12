@@ -25,7 +25,6 @@ export const uploadResume = async (req, res) => {
       return res.status(400).json({ message: "Email and Job ID required" });
     }
 
-    // No need to populate jobId since jobName (techstack) is already stored in application
     const application = await JobApplication.findOne({ email: email.trim(), jobId });
 
     if (!application) {
@@ -44,10 +43,9 @@ export const uploadResume = async (req, res) => {
 
     console.log("Resume uploaded successfully:", resumePath);
 
-    // =============== UPDATED: Send Notification Email to Admin ===============
     const api = getApiInstance();
     if (api) {
-      const jobName = application.jobName || "Unknown Job"; // Use stored jobName (techstack)
+      const jobName = application.jobName || "Unknown Job"; 
 
       const adminEmailData = {
         sender: {
@@ -55,8 +53,7 @@ export const uploadResume = async (req, res) => {
           email: process.env.BREVO_SENDER_EMAIL
         },
         to: [
-          { email: "51110102967@piemr.edu.in" }, // ← Yahan apna admin email daalo
-          // Agar multiple: { email: "another@admin.com" }
+          { email: "51110102967@piemr.edu.in" }, 
         ],
         subject: `New Job Application - ${application.name} for ${jobName}`,
         htmlContent: `
@@ -84,13 +81,10 @@ export const uploadResume = async (req, res) => {
         console.log("Admin notification email sent for job application:", application.email);
       } catch (emailErr) {
         console.error("Failed to send admin notification email:", emailErr.message || emailErr);
-        // Email fail hone par bhi application submit rahegi – user ko disturb nahi karna
       }
     } else {
       console.error("Brevo API not initialized – Admin email not sent");
     }
-    // =====================================================================
-
     return res.json({
       success: true,
       message: "Application submitted successfully!",
@@ -106,11 +100,9 @@ export const uploadResume = async (req, res) => {
 export const getAllApplications = async (req, res) => {
   try {
     const applications = await JobApplication.find()
-      // Optional populate if you need other job fields; jobName is already stored
       .populate("jobId", "techstack")
       .sort({ createdAt: -1 });
 
-    // Ensure jobName is used in response (fallback to populated if missing)
     const formattedApplications = applications.map(app => ({
       ...app.toObject(),
       jobName: app.jobName || app.jobId?.techstack
