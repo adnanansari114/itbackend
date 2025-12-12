@@ -28,13 +28,13 @@ app.use(cors({
     credentials: true 
 }));
 
-app.use(express.raw({ type: "application/octet-stream" }));
- 
-app.use("/api/blogs", blogRoutes);
-app.use("/api/comments", commentRoutes);
+// app.use(express.raw({ type: "application/octet-stream" }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use("/api/blogs", blogRoutes);
+app.use("/api/comments", commentRoutes);
 
 app.use("/api/jobs", jobRoutes);
 app.use("/api/admin", adminRoutes); 
