@@ -4,12 +4,13 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import connectDB from "./config/db.js";
+import commentRoutes from "./routes/commentRoutes.js";
+import blogRoutes from "./routes/blogRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
-import commentRoutes from "./routes/commentRoutes.js";
-import blogRoutes from "./routes/blogRoutes.js";
+
 
 connectDB();
 

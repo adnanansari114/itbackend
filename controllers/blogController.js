@@ -96,50 +96,36 @@ export const createBlog = async (req, res) => {
   try {
     let imageUrl = null;
 
-    // Image upload to Cloudinary
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path);
       imageUrl = result.secure_url;
-
-      // Delete temp file
-      fs.unlink(req.file.path, (err) => {
-        if (err) console.log("Temp file delete error:", err);
-      });
+      fs.unlink(req.file.path, () => {});
     }
 
-    // YE SABSE ZAROORI PART HAI — paragraphs1 ko string se array banao
+    // Safe parsing for paragraphs1
     let paragraphs1 = [];
     if (req.body.paragraphs1) {
       try {
-        paragraphs1 = JSON.parse(req.body.paragraphs1);
-        if (!Array.isArray(paragraphs1)) paragraphs1 = [paragraphs1];
+        const parsed = JSON.parse(req.body.paragraphs1);
+        paragraphs1 = Array.isArray(parsed) ? parsed : [parsed];
       } catch (e) {
-        // Agar JSON parse fail ho to string ko array mein daal do
-        paragraphs1 = [req.body.paragraphs1].flat();
+        paragraphs1 = [req.body.paragraphs1].filter(Boolean);
       }
     }
 
     const blogData = {
-      title: req.body.title?.trim(),
-      heading1: req.body.heading1?.trim(),
-      paragraphs1: paragraphs1.filter(p => p && p.trim()), // empty remove
+      title: req.body.title || "Untitled",
+      heading1: req.body.heading1 || "No heading",
+      paragraphs1: paragraphs1.filter(p => p?.trim()),
       image: imageUrl
     };
 
-    // Validation
-    if (!blogData.title || !blogData.heading1 || blogData.paragraphs1.length === 0) {
-      return res.status(400).json({ message: "Title, heading and at least one paragraph required" });
-    }
-
     const blog = await Blog.create(blogData);
-    res.status(201).json({ message: "Blog created successfully", blog });
+    res.status(201).json({ message: "Blog created!", blog });
 
   } catch (err) {
     console.error("Create blog error:", err);
-    res.status(500).json({ 
-      message: "Server error while creating blog", 
-      error: err.message 
-    });
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
