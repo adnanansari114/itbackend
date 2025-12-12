@@ -96,38 +96,54 @@ export const createBlog = async (req, res) => {
   try {
     let imageUrl = null;
 
+    // Image upload to Cloudinary
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path);
       imageUrl = result.secure_url;
-      fs.unlink(req.file.path, err => err && console.log(err));
+
+      // Delete temp file
+      fs.unlink(req.file.path, (err) => {
+        if (err) console.log("Temp file delete error:", err);
+      });
     }
 
-    // YE 3 LINES ADD KARO — paragraphs1 ko array banao
+    // YE SABSE ZAROORI PART HAI — paragraphs1 ko string se array banao
     let paragraphs1 = [];
     if (req.body.paragraphs1) {
       try {
         paragraphs1 = JSON.parse(req.body.paragraphs1);
+        if (!Array.isArray(paragraphs1)) paragraphs1 = [paragraphs1];
       } catch (e) {
-        paragraphs1 = typeof req.body.paragraphs1 === "string" 
-          ? [req.body.paragraphs1] 
-          : [];
+        // Agar JSON parse fail ho to string ko array mein daal do
+        paragraphs1 = [req.body.paragraphs1].flat();
       }
     }
 
     const blogData = {
-      title: req.body.title,
-      heading1: req.body.heading1,
-      paragraphs1: paragraphs1,  // ← ab ye array hai
+      title: req.body.title?.trim(),
+      heading1: req.body.heading1?.trim(),
+      paragraphs1: paragraphs1.filter(p => p && p.trim()), // empty remove
       image: imageUrl
     };
 
+    // Validation
+    if (!blogData.title || !blogData.heading1 || blogData.paragraphs1.length === 0) {
+      return res.status(400).json({ message: "Title, heading and at least one paragraph required" });
+    }
+
     const blog = await Blog.create(blogData);
-    res.status(201).json({ message: "Blog created", blog });
+    res.status(201).json({ message: "Blog created successfully", blog });
+
   } catch (err) {
     console.error("Create blog error:", err);
-    res.status(500).json({ message: "Error", error: err.message });
+    res.status(500).json({ 
+      message: "Server error while creating blog", 
+      error: err.message 
+    });
   }
 };
+
+// controllers/blogController.js → updateBlog function mein
 
 export const updateBlog = async (req, res) => {
   try {
