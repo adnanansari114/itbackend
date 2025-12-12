@@ -102,22 +102,32 @@ export const createBlog = async (req, res) => {
       fs.unlink(req.file.path, () => {});
     }
 
-    // Safe parsing for paragraphs1
+    // YE SABSE ZAROORI FIX — req.body khali aa raha tha!
     let paragraphs1 = [];
     if (req.body.paragraphs1) {
       try {
         const parsed = JSON.parse(req.body.paragraphs1);
         paragraphs1 = Array.isArray(parsed) ? parsed : [parsed];
       } catch (e) {
-        paragraphs1 = [req.body.paragraphs1].filter(Boolean);
+        paragraphs1 = typeof req.body.paragraphs1 === "string" 
+          ? req.body.paragraphs1.split(",").map(p => p.trim()).filter(Boolean)
+          : [];
       }
     }
 
+    // YE 3 LINES ADD KARO — req.body.title undefined tha!
+    const title = req.body.title?.trim() || "Untitled Blog";
+    const heading1 = req.body.heading1?.trim() || "No Heading";
+
+    if (!title || !heading1 || paragraphs1.length === 0) {
+      return res.status(400).json({ message: "Title, heading and paragraphs required" });
+    }
+
     const blogData = {
-      title: req.body.title || "Untitled",
-      heading1: req.body.heading1 || "No heading",
-      paragraphs1: paragraphs1.filter(p => p?.trim()),
-      image: imageUrl
+      title,
+      heading1,
+      paragraphs1: paragraphs1.filter(p => p.trim()),
+      image: imageUrl  // null bhi chalega
     };
 
     const blog = await Blog.create(blogData);
