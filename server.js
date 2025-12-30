@@ -10,6 +10,7 @@ import adminRoutes from "./routes/adminRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
 
 
 connectDB();
@@ -34,7 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/blogs", blogRoutes);
 app.use("/api/comments", commentRoutes);
-
+app.use("/api/category", categoryRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/admin", adminRoutes); 
 app.use("/api/contact", contactRoutes);

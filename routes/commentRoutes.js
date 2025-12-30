@@ -4,18 +4,6 @@ import Blog from "../models/Blog.js";
 
 const router = express.Router();
 
-// router.post("/add", async (req, res) => {
-//   try {
-//     const { blogId, blogtitle, name, email, website, comment } = req.body;
-
-//     const newComment = new Comment({ blogId, blogtitle, name, email, website, comment });
-//     await newComment.save();
-
-//     res.json({ success: true, message: "Comment submitted!" });
-//   } catch (error) {
-//     res.status(500).json({ success: false, error: error.message });
-//   }
-// });
 
 router.get("/all", async (req, res) => {
   try {
